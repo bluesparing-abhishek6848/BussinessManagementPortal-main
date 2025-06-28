@@ -9,12 +9,12 @@ export const AdvanceColumns = [
     Cell: ({ row }: { row: { original: IAdvance } }) =>
       row.original.employeeId?.name || "-",
   },
-  {
-    accessorKey: "employeeId.email",
-    header: "Email",
-    Cell: ({ row }: { row: { original: IAdvance } }) =>
-      row.original.employeeId?.email || "-",
-  },
+  // {
+  //   accessorKey: "employeeId.email",
+  //   header: "Email",
+  //   Cell: ({ row }: { row: { original: IAdvance } }) =>
+  //     row.original.employeeId?.email || "-",
+  // },
   {
     accessorKey: "advanceAmount",
     header: "Advance Amount",

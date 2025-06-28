@@ -58,7 +58,7 @@ const AdvanceSummary = () => {
         // key={selectedBranch}
         subtitle="Dashboard"
         headLine="Advance Table"
-        endpoint={`advances?branch`}
+        endpoint={`advances`}
         searchEndpoint={`advances/search?branch`}
         onView={onView}
         columns={columns}
