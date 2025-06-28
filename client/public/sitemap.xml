@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset 
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Public routes -->
+  <url><loc>https://aapkafuture.com/</loc></url>
+  <url><loc>https://aapkafuture.com/admin/login</loc></url>
+  <url><loc>https://aapkafuture.com/unauthorized</loc></url>
+
+  <!-- Admin routes -->
+  <url><loc>https://aapkafuture.com/admin/dashboard</loc></url>
+  <url><loc>https://aapkafuture.com/admin/users</loc></url>
+  <url><loc>https://aapkafuture.com/admin/users/add</loc></url>
+  <url><loc>https://aapkafuture.com/admin/finance</loc></url>
+  <url><loc>https://aapkafuture.com/admin/finance/add</loc></url>
+  <url><loc>https://aapkafuture.com/admin/loan-table</loc></url>
+  <url><loc>https://aapkafuture.com/admin/branch</loc></url>
+  <url><loc>https://aapkafuture.com/admin/branch/add</loc></url>
+  <url><loc>https://aapkafuture.com/admin/profile</loc></url>
+  <url><loc>https://aapkafuture.com/admin/loan-summary</loc></url>
+
+  <!-- Branch Manager routes -->
+  <url><loc>https://aapkafuture.com/branch-manager/dashboard</loc></url>
+  <url><loc>https://aapkafuture.com/branch-manager/customers</loc></url>
+  <url><loc>https://aapkafuture.com/branch-manager/customers/add</loc></url>
+  <url><loc>https://aapkafuture.com/branch-manager/users</loc></url>
+  <url><loc>https://aapkafuture.com/branch-manager/users/add</loc></url>
+  <url><loc>https://aapkafuture.com/branch-manager/loan</loc></url>
+  <url><loc>https://aapkafuture.com/branch-manager/loan/add</loc></url>
+  <url><loc>https://aapkafuture.com/branch-manager/profile</loc></url>
+  <url><loc>https://aapkafuture.com/branch-manager/today-collection</loc></url>
+
+  <!-- Collection Manager routes -->
+  <url><loc>https://aapkafuture.com/collection-manager/dashboard</loc></url>
+  <url><loc>https://aapkafuture.com/collection-manager/profile</loc></url>
+  <url><loc>https://aapkafuture.com/collection-manager/today-collection</loc></url>
+
+  <!-- Account Manager routes -->
+  <url><loc>https://aapkafuture.com/account-manager/dashboard</loc></url>
+  <url><loc>https://aapkafuture.com/account-manager/finance</loc></url>
+  <url><loc>https://aapkafuture.com/account-manager/finance/add</loc></url>
+  <url><loc>https://aapkafuture.com/account-manager/profile</loc></url>
+
+</urlset>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aapkafuture.com//sitemap.xml
