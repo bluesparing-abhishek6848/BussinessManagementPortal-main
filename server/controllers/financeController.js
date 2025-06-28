@@ -8,9 +8,21 @@ export const getFinanceSummary = async (req, res) => {
       {
         $group: {
           _id: null,
-          totalIncome: { $sum: "$income" },
-          totalExpense: { $sum: "$expense" },
-          totalProfit: { $sum: { $subtract: ["$income", "$expense"] } },
+          totalIncome: {
+            $sum: {
+              $cond: [{ $eq: ["$type", "income"] }, "$amount", 0],
+            },
+          },
+          totalExpense: {
+            $sum: {
+              $cond: [{ $eq: ["$type", "expense"] }, "$amount", 0],
+            },
+          },
+        },
+      },
+      {
+        $addFields: {
+          totalProfit: { $subtract: ["$totalIncome", "$totalExpense"] },
         },
       },
     ]);
@@ -36,4 +48,4 @@ export const getFinanceSummary = async (req, res) => {
       .status(500)
       .json(new apiResponse(500, null, "Internal server error"));
   }
-}
+};
