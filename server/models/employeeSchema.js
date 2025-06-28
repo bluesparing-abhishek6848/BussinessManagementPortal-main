@@ -16,7 +16,6 @@ const employeeSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  versionKey: false
 });
 const Employee = mongoose.model("Employee", employeeSchema);
 

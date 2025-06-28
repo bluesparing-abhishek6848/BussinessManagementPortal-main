@@ -2,6 +2,7 @@ import express from 'express';
 import employeeRoute from './routes/employeeRoute.js';
 import userRoute from './routes/userRoute.js';
 import advanceRoute from './routes/advanceRoute.js';
+import financeRoute from './routes/financeRoute.js';
 import './config/db.js'; // Import the database connection configuration
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -32,6 +33,7 @@ app.use(cookieParser());
 app.use('/api/users',userRoute);
 app.use("/api/advances",advanceRoute);
 app.use('/api/employees',employeeRoute);
+app.use("/api/finance", financeRoute)
 
 
 
