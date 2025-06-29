@@ -1,12 +1,12 @@
 import TableWrapper from "../../../../lib/TableWrapper";
-import AddCapitalForm from "./AddCapitalForm";
+import AddAttendanceForm from "./AddAttendanceForm";
 
-const AddCapital = () => {
+const AddAttendance = () => {
   return (
     <TableWrapper headLine="Add Capital Form">
-      <AddCapitalForm />
+      <AddAttendanceForm />
     </TableWrapper>
   );
 };
 
-export default AddCapital;
+export default AddAttendance;

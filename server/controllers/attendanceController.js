@@ -35,7 +35,7 @@ export const createAttendance = async (req, res) => {
     const newAttendance = new Attendance({
       employeeId,
       date: istDate,
-      status,
+      status: status.toLowerCase().trim(),
       checkInTime,
       checkOutTime,
       createdBy: req.user?._id,

@@ -67,8 +67,8 @@ export const AdminSidebar = [
   },
 
   {
-    name: "Finance",
-    link: "admin/finance",
+    name: "Attendance",
+    link: "admin/attendance",
     icon: <SquareKanban />,
   },
 ];

@@ -39,7 +39,7 @@ app.use("/api/advances",checkUserAuth,advanceRoute);
 app.use('/api/employees',checkUserAuth,employeeRoute);
 app.use("/api/finance",checkUserAuth, financeRoute);
 app.use('/api/orders',checkUserAuth,orderRoute);
-app.use('/api/attendance',checkUserAuth,advanceRoute );
+app.use('/api/attendance',checkUserAuth,attendanceRoute );
 
 
 

@@ -38,10 +38,10 @@ const AdminEditUser = lazy(
   () => import("./components/Admin/AdminEmployees/AdminEditEmployees")
 );
 const CapitalTable = lazy(
-  () => import("./components/Admin/AdminFinance/CapitalTable")
+  () => import("./components/Admin/AdminFinance/AttendanceTable")
 );
 const AddCapital = lazy(
-  () => import("./components/Admin/AdminFinance/AddCapital/AddCapital")
+  () => import("./components/Admin/AdminFinance/AddCapital/AddAttendance")
 );
 // const AddUser = lazy(() => import("./components/Common/User/AddUser/AddUser"));
 // const EditUser = lazy(
@@ -110,8 +110,8 @@ const routeConfig = [
           { path: "customers", element: <AdminCustomer /> },
           { path: "users/add", element: <AdminAddUser /> },
           { path: "users/edit/:id", element: <AdminEditUser /> },
-          { path: "finance", element: <CapitalTable /> },
-          { path: "finance/add", element: <AddCapital /> },
+          { path: "attendance", element: <CapitalTable /> },
+          { path: "attendance/add", element: <AddCapital /> },
           { path: "finance/edit", element: <EditCapital /> },
           { path: "loan-table", element: <LoanTable /> },
           { path: "Orders", element: <AdminOrdersTable /> },
