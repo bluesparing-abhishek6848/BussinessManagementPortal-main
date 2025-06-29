@@ -2,56 +2,55 @@ import { useNavigate } from "react-router-dom";
 import ReusableTable from "../../../lib/ReusableTable";
 import useDelete from "../../../Hooks/useDelete";
 import { useMemo } from "react";
-import { BranchColumns } from "./OrderCol";
-import type { IBranch } from "./OrderTypes";
+import { OrderColumns } from "./OrderCol";
+import type { IOrder } from "./OrderTypes";
 import { toast } from "react-toastify";
 
 const OrderTable = () => {
   const navigate = useNavigate();
 
-  const { deleteData } = useDelete("branches");
+  const { deleteData } = useDelete("orders");
   const userJson = localStorage.getItem("user");
   const role = userJson ? JSON.parse(userJson).role : null;
-  // ✅ FIXED: Call BranchColumns to get array of column definitions
-  const columns = useMemo(() => BranchColumns(), []);
+
+  // Columns for orders
+  const columns = useMemo(() => OrderColumns(), []);
 
   const handleAdd = () => {
     if (role === "admin") {
-      navigate("/admin/branch/add");
-    } else if (role === "accountManager") {
-      navigate("/account-manager/branch/add");
-    } else {
+      navigate("/admin/orders/add");
+    }  else {
       alert("Unauthorized role");
     }
   };
 
-  const handleDelete = async (row: IBranch, refetch: () => void) => {
+  const handleDelete = async (row: IOrder, refetch: () => void) => {
     try {
       await deleteData(row._id);
       refetch();
-      toast.success("Branch deleted successfully!");
+      toast.success("Order deleted successfully!");
     } catch (error: any) {
       toast.error(error.message || "An unexpected error occurred.");
     }
   };
 
-  const handleEdit = (row: IBranch) => {
+  const handleEdit = (row: IOrder) => {
     if (role === "admin") {
-      navigate(`/admin/branch/edit/${row._id}`, { state: row });
+      navigate(`/admin/order/edit/${row._id}`, { state: row });
     } else if (role === "accountManager") {
-      navigate(`/account-manager/branch/edit/${row._id}`, { state: row });
+      navigate(`/account-manager/order/edit/${row._id}`, { state: row });
     } else {
       alert("Unauthorized role");
     }
   };
 
   return (
-    <ReusableTable<IBranch>
+    <ReusableTable<IOrder>
       subtitle="Dashboard"
       headLine="Order Table"
       btnText="Add Order"
-      endpoint="branches"
-      searchEndpoint="branches/search"
+      endpoint="orders"
+      searchEndpoint="orders/search"
       columns={columns}
       onAdd={handleAdd}
       onEdit={handleEdit}

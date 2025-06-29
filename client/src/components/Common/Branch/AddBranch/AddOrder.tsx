@@ -1,12 +1,12 @@
 import TableWrapper from "../../../../lib/TableWrapper"
-import AddBranchForm from "./AddBranchForm"
+import AddOrderForm from "./AddOrderForm"
 
-const AddBranch = () => {
+const AddOrder = () => {
   return (
    <TableWrapper headLine='Add Branch'>
-    <AddBranchForm/>
+    <AddOrderForm/>
    </TableWrapper>
   )
 }
   
-export default AddBranch
+export default AddOrder;

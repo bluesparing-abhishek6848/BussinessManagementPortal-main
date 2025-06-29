@@ -1,9 +1,9 @@
-import AddBranch from "../../Common/Branch/AddBranch/AddBranch"
+import AddOrder from "../../Common/Branch/AddBranch/AddOrder"
 
-const AdminAddBranchForm = () => {
+const AdminAddOrderForm = () => {
   return (
-    <AddBranch />
+    <AddOrder />
   )
 }
 
-export default AdminAddBranchForm
+export default AdminAddOrderForm

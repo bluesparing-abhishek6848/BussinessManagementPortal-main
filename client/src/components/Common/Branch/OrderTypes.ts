@@ -1,18 +1,16 @@
-export interface IBranch {
-
+export interface IOrder {
   _id: string;
-  name: string;
-  address?: string;
-  manager?: string;
-
-  createdBy: string | null;
-  updatedBy: string | null;
-
+  itemName: string;
+  itemImage?: string;
+  itemDescription: string;
+  quantity: number;
+  amountRecieved?: number;
+  expenseCost?: number;
+  price: number;
+  status: "recieved" | "making" | "completed" | "pending";
   createdAt: string;
   updatedAt: string;
+  createdBy: string;
 }
 
-export interface IBranchDropDown {
-  _id: string;
-  name: string;
-}
+

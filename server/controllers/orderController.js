@@ -8,7 +8,7 @@ const getISTDate = () => new Date(Date.now() + 5.5 * 60 * 60 * 1000);
 export const createOrder = async (req, res, next) => {
   const {
     itemName,
-    itemImage,
+    // itemImage,
     itemDescription,
     quantity,
     amountRecieved,
@@ -36,7 +36,7 @@ export const createOrder = async (req, res, next) => {
     // Create the order
     const newOrder = new Order({
       itemName,
-      itemImage,
+      // itemImage,
       itemDescription,
       quantity,
       amountRecieved,

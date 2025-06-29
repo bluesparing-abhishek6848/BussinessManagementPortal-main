@@ -6,10 +6,10 @@ const orderSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  itemImage: {
-    type: String,
-    trim: true
-  },
+  // itemImage: {
+  //   type: String,
+  //   trim: true
+  // },
 itemDescription: {
     type: String,
     required: true,
