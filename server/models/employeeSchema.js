@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 const employeeSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String },
   position: { type: String, required: true },
   department: { type: String, required: true ,default: "General"},
   salary: { type: Number, required: true },
@@ -13,6 +12,11 @@ const employeeSchema = new mongoose.Schema({
     city: { type: String, required: true },
     state: { type: String, required: true },
     zipCode: { type: String, required: true }
+  },
+  createdBy:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
   }
 }, {
   timestamps: true,

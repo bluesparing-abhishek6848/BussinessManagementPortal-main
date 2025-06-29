@@ -27,11 +27,11 @@ export const getFinanceSummary = async (req, res) => {
       },
     ]);
 
-    if (financeSummary.length === 0) {
-      return res
-        .status(404)
-        .json(new apiResponse(404, null, "No finance data found"));
-    }
+    // if (financeSummary.length === 0) {
+    //   return res
+    //     .status(404)
+    //     .json(new apiResponse(404, null, "No finance data found"));
+    // }
 
     return res
       .status(200)

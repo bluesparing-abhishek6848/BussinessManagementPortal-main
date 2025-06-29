@@ -4,7 +4,12 @@ import ApiResponse from "../utils/apiResponse.js";
 // Create a new employee
 export const createEmployee = async (req, res) => {
   try {
-    const employee = new Employee(req.body);
+    const employeeData = {
+      ...req.body,
+      createdBy: req.user ? req.user._id : null
+    };
+    console.log("Creating employee with data:", employeeData);
+    const employee = new Employee(employeeData);
     const savedEmployee = await employee.save();
     res
       .status(201)

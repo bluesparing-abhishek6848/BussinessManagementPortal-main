@@ -12,6 +12,7 @@ export const createAdvance = async (req, res) => {
     const newAdvance = new Advance({
       advanceAmount,
       employeeId,
+      createdBy: req.user.id,
     });
     await newAdvance.save();
 

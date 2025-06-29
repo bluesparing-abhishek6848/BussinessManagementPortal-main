@@ -1,21 +1,31 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
+// import { asyncHandler } from "../utils/asyncHandler.js";
+// import { ApiError } from "../utils/apiError.js";
+import User from "../models/userSchema.js";
 
-const authenticate = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({ message: 'No token provided' });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ message: 'Failed to authenticate token' });
+const verifyJWT = async (req, res, next) => {
+  try {
+    const token =
+      req.cookies?.accessToken ||
+      req.header("Authorization")?.replace("Bearer ", "");
+    if (!token) {
+      res.status(401);
+      return next(new Error("Unauthorized request"));
     }
-    req.user = decoded;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decodedToken._id).select(
+      "-password -refreshToken"
+    );
+    if (!user) {
+      res.status(401);
+      return next(new Error("Invalid Access Token"));
+    }
+    req.user = user;
     next();
-  });
-}
-// This middleware checks for a JWT token in the Authorization header,
-// verifies it, and attaches the decoded user information to the request object.
+  } catch (error) {
+    res.status(401);
+    return next(new Error(error?.message || "Invalid access token"));
+  }
+};
 
-export default authenticate;
+export default verifyJWT;

@@ -23,6 +23,11 @@ const advanceSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },  
 }, {
   timestamps: true,
 

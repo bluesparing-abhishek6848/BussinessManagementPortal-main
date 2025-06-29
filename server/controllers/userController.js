@@ -53,71 +53,84 @@ export const createUser = async (req, res) => {
   }
 };
 
-// Login route to authenticate user
+
+
+// Helper to generate tokens
+const generateAccessAndRefreshTokens = async (userId, role) => {
+  const accessToken = jwt.sign(
+    { _id: userId, role },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+  const refreshToken = jwt.sign(
+    { _id: userId, role },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+  return { accessToken, refreshToken };
+};
+
+// Remove these imports:
+// import bcrypt from "bcryptjs";
+// import asyncHandler from "express-async-handler";
+
+// ...existing code...
+
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
-
-  // Validate required fields
   if (!email || !password) {
     return res
       .status(400)
-      .json(new ApiResponse(400, null, "Email and password are required."));
+      .json(new ApiResponse(400, null, "Invalid credentials"));
   }
-
   try {
-    // Find user by email
-    const user = await User.findOne({ email });
+    const trimEmail = email.trim();
+    const user = await User.findOne({ email: trimEmail });
     if (!user || user.password !== password) {
       return res
-        .status(401)
-        .json(new ApiResponse(401, null, "Invalid email or password."));
+        .status(400)
+        .json(new ApiResponse(400, null, "Invalid credentials"));
     }
-
-    // Generate JWT access token
-    const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
-    // Generate refresh token (random string)
-    const refreshToken = crypto.randomBytes(40).toString("hex");
-
-    // Save refresh token to user in DB
-    user.refreshToken = refreshToken;
-    await user.save();
-
-    // Set tokens in HTTP-only cookies
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "development",
-      maxAge: 60 * 60 * 1000, // 1 hour
-    });
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "development",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-
-    // Return success response with tokens
-    return res.status(200).json(
-      new ApiResponse(
-        200,
-        {
-          user: {
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            role: user.role,
-          },
-        },
-        "Login successful."
-      )
+    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+      user._id.toString(),
+      user.role
     );
+    const options = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 60 * 60 * 1000, // 1 hour
+    };
+    const refreshOptions = {
+      ...options,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    };
+    res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, refreshOptions)
+      .json(
+        new ApiResponse(
+          200,
+          {
+            user: {
+              name: user.name,
+              email: user.email,
+              phone: user.phone,
+              role: user.role,
+            },
+          },
+          "Login successful"
+        )
+      );
   } catch (error) {
     return res
       .status(500)
       .json(new ApiResponse(500, null, `Error logging in. ${error.message}`));
   }
 };
+
+// ...existing code...
 
 // Refresh token route to get a new access token
 export const refreshToken = async (req, res) => {
