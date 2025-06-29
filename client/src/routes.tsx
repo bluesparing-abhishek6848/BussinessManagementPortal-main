@@ -59,7 +59,7 @@ const AddCapital = lazy(
 const Profile = lazy(() => import("./pages/Profile"));
 const SignUpForm = lazy(() => import("./pages/AuthSwitcher/SignUpForm"));
 const AdminBranchTable = lazy(
-  () => import("./components/Admin/AdminBranch/AdminBranchTable")
+  () => import("./components/Admin/AdminBranch/AdminOrderTable")
 );
 const AdminAddBranchForm = lazy(
   () => import("./components/Admin/AdminBranch/AdminAddBranch")
@@ -114,7 +114,7 @@ const routeConfig = [
           { path: "finance/add", element: <AddCapital /> },
           { path: "finance/edit", element: <EditCapital /> },
           { path: "loan-table", element: <LoanTable /> },
-          { path: "branch", element: <AdminBranchTable /> },
+          { path: "Orders", element: <AdminBranchTable /> },
           { path: "branch/add", element: <AdminAddBranchForm /> },
           { path: "branch/edit/:id", element: <AdminEditBranchForm /> },
           { path: "advance", element: <AdvanceSummary/> },

@@ -1,4 +1,4 @@
-import AddEmployee from "../../Common/User/AddUser/AddEmployee"
+import AddEmployee from "../../Common/User/AddEmployee/AddEmployee"
 
 const AdminAddEmployee = () => {
   return (

@@ -61,8 +61,8 @@ export const AdminSidebar = [
     icon: <Currency />,
   },
   {
-    name: "Branch",
-    link: "admin/branch",
+    name: "Orders",
+    link: "admin/orders",
     icon: <Split />,
   },
 

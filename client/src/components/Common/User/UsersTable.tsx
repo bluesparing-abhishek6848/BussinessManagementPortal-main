@@ -7,7 +7,7 @@ import ReusableTable from "../../../lib/ReusableTable";
 import { toast } from "react-toastify";
 import type { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import type { IBranch } from "../Branch/BranchTypes";
+import type { IBranch } from "../Branch/OrderTypes";
 // import ConfirmDialog from "../../../lib/ConfirmDelete";
 
 const UsersTable = () => {
@@ -79,8 +79,7 @@ const UsersTable = () => {
   };
 
   const makeEndPoints = () => {
-   
-      return "employees";
+    return "employees";
   };
   const makeSearchEndpoints = () => {
     if (user?.role === "admin") {

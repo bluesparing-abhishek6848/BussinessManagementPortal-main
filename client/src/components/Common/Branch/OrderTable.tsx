@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 import ReusableTable from "../../../lib/ReusableTable";
 import useDelete from "../../../Hooks/useDelete";
 import { useMemo } from "react";
-import { BranchColumns } from "./BranchCol";
-import type { IBranch } from "./BranchTypes";
+import { BranchColumns } from "./OrderCol";
+import type { IBranch } from "./OrderTypes";
 import { toast } from "react-toastify";
 
-const BranchTable = () => {
+const OrderTable = () => {
   const navigate = useNavigate();
 
   const { deleteData } = useDelete("branches");
@@ -48,8 +48,8 @@ const BranchTable = () => {
   return (
     <ReusableTable<IBranch>
       subtitle="Dashboard"
-      headLine="Branch Table"
-      btnText="Add Branch"
+      headLine="Order Table"
+      btnText="Add Order"
       endpoint="branches"
       searchEndpoint="branches/search"
       columns={columns}
@@ -60,4 +60,4 @@ const BranchTable = () => {
   );
 };
 
-export default BranchTable;
+export default OrderTable;

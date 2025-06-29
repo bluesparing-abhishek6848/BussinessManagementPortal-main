@@ -1,6 +1,5 @@
 import { Controller, useForm } from "react-hook-form";
-import Grid from '@mui/material/Grid';
-
+import Grid from "@mui/material/Grid";
 
 import { useNavigate } from "react-router-dom";
 import usePost from "../../../../Hooks/usePost";
@@ -9,7 +8,7 @@ import useGet from "../../../../Hooks/useGet";
 
 import { toast } from "react-toastify";
 import { ReusableAutocomplete } from "../../../../lib/ReusableAutocomplete";
-import type { IBranchDropDown } from "../../../Common/Branch/BranchTypes";
+import type { IBranchDropDown } from "../../../Common/Branch/OrderTypes";
 import type { GetResData } from "../../../Common/Customer/CustomerTypes";
 import type { RootState } from "../../../../store";
 import { useSelector } from "react-redux";
@@ -54,18 +53,17 @@ const AddCapitalForm = () => {
 
     const payload: AddCapitalFormProps = {
       amount: data.amount,
-      branch: currentBranchObject || data.branch, 
+      branch: currentBranchObject || data.branch,
     };
 
     try {
       await postData(payload, "finance");
-      
+
       toast.success("Capital Added successfully!");
 
       reset();
       navigate(-1);
     } catch (error: any) {
-      
       toast.error(error.message || "An unexpected error occurred.");
     }
   };

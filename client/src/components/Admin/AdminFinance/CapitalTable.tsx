@@ -9,12 +9,12 @@ import { CapitalColumns } from "./CapitalCol";
 import type { ICapital } from "./CapitalTypes";
 import type { GetResData } from "../../Common/Customer/CustomerTypes";
 import useGet from "../../../Hooks/useGet";
-import type { IBranchDropDown } from "../../Common/Branch/BranchTypes";
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import type { SelectChangeEvent } from '@mui/material/Select';
+import type { IBranchDropDown } from "../../Common/Branch/OrderTypes";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import type { SelectChangeEvent } from "@mui/material/Select";
 
 import { toast } from "react-toastify";
 import DropDownSkeleton from "../../SkeletonPage/DropDownSkeleton";
@@ -26,7 +26,6 @@ const CapitalTable = () => {
   const { data: branchList } =
     useGet<GetResData<IBranchDropDown>>("branches/drop-down");
 
-
   const [selectedBranch, setSelectedBranch] = useState<string>("");
   const columns = useMemo(() => CapitalColumns, [selectedBranch]);
 
@@ -36,13 +35,12 @@ const CapitalTable = () => {
     }
   }, [branchList]);
 
-
   const handleAdd = () => {
     navigate("add");
   };
 
   const handleEdit = (row: ICapital) => {
-    navigate(`edit`,{ state: row });
+    navigate(`edit`, { state: row });
   };
 
   const handleDelete = async (row: ICapital, refetch: () => void) => {
@@ -63,7 +61,6 @@ const CapitalTable = () => {
     <>
       {!branchList?.data ? (
         <DropDownSkeleton height={56} width="100%" />
-
       ) : (
         <FormControl fullWidth>
           <InputLabel id="branch-select-label">Select Branch</InputLabel>
@@ -83,7 +80,6 @@ const CapitalTable = () => {
         </FormControl>
       )}
 
-
       {!branchList?.data || !selectedBranch ? (
         <TableSkeleton />
       ) : (
@@ -100,7 +96,6 @@ const CapitalTable = () => {
           onDelete={handleDelete}
         />
       )}
-
     </>
   );
 };

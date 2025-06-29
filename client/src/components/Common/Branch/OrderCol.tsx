@@ -1,7 +1,7 @@
 import type { MRT_ColumnDef } from "material-react-table";
 import { DAYJS_DISPLAY_FORMAT_TABLES } from "../../../Constant";
 import dayjs from "dayjs";
-import type { IBranch } from "./BranchTypes";
+import type { IBranch } from "./OrderTypes";
 
 export const BranchColumns = (): MRT_ColumnDef<IBranch>[] => [
   { accessorKey: "name", header: "Branch Name" },
