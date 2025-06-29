@@ -4,7 +4,9 @@ import userRoute from './routes/userRoute.js';
 import advanceRoute from './routes/advanceRoute.js';
 import financeRoute from './routes/financeRoute.js';
 import orderRoute from './routes/orderRoute.js';
-import checkUserAuth from './middleware/auth.js'; // Import authentication middleware
+import attendanceRoute from './routes/attendanceRoute.js';
+import checkUserAuth from './middleware/auth.js'; // Import 
+// authentication middleware
 import './config/db.js'; // Import the database connection configuration
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -35,8 +37,9 @@ app.use(cookieParser());
 app.use('/api/users',userRoute);
 app.use("/api/advances",checkUserAuth,advanceRoute);
 app.use('/api/employees',checkUserAuth,employeeRoute);
-app.use("/api/finance",checkUserAuth, financeRoute)
-app.use('/api/orders',checkUserAuth,orderRoute)
+app.use("/api/finance",checkUserAuth, financeRoute);
+app.use('/api/orders',checkUserAuth,orderRoute);
+app.use('/api/attendance',checkUserAuth,advanceRoute );
 
 
 
