@@ -3,6 +3,7 @@ import employeeRoute from './routes/employeeRoute.js';
 import userRoute from './routes/userRoute.js';
 import advanceRoute from './routes/advanceRoute.js';
 import financeRoute from './routes/financeRoute.js';
+import orderRoute from './routes/orderRoute.js';
 import './config/db.js'; // Import the database connection configuration
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -34,6 +35,7 @@ app.use('/api/users',userRoute);
 app.use("/api/advances",advanceRoute);
 app.use('/api/employees',employeeRoute);
 app.use("/api/finance", financeRoute)
+app.use('/api/orders',orderRoute)
 
 
 
