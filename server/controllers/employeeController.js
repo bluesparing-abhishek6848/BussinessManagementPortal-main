@@ -8,7 +8,7 @@ export const createEmployee = async (req, res) => {
       ...req.body,
       createdBy: req.user ? req.user._id : null
     };
-    console.log("Creating employee with data:", employeeData);
+    // console.log("Creating employee with data:", employeeData);
     const employee = new Employee(employeeData);
     const savedEmployee = await employee.save();
     res
