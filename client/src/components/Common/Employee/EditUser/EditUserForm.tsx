@@ -10,7 +10,7 @@ import useGet from "../../../../Hooks/useGet";
 import React, { useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReusableAutocomplete } from "../../../../lib/ReusableAutocomplete";
-import type { IBranchDropDown } from "../../Branch/OrderTypes";
+import type { IBranchDropDown } from "../../Order/OrderTypes";
 import type { GetResData } from "../../Customer/CustomerTypes";
 import { toast } from "react-toastify";
 import SubmitButton from "../../../../lib/ButtonWrapper";

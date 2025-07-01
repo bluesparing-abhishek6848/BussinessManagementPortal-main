@@ -1,9 +1,7 @@
-import AddEmployee from "../../Common/User/AddEmployee/AddEmployee"
+import AddEmployee from "../../Common/Employee/AddEmployee/AddEmployee";
 
 const AdminAddEmployee = () => {
-  return (
-    <AddEmployee />
-  )
-}
+  return <AddEmployee />;
+};
 
-export default AdminAddEmployee
+export default AdminAddEmployee;

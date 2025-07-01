@@ -1,29 +1,34 @@
 import { Button, Box } from "@mui/material";
 import { useMemo } from "react";
-// import useGet from "../../../Hooks/useGet";
-// import type { IBranchDropDown } from "../../Common/Branch/BranchTypes";
-// import type { GetResData } from "../../Common/Customer/CustomerTypes";
-
-// import type { SelectChangeEvent } from "@mui/material/Select";
-
-import type { IAdvance } from "../../Common/Advance/AdvanceTypes.tsx"; // Make sure this type exists
+import type { IAdvance } from "../../Common/Advance/AdvanceTypes.tsx";
 import ReusableTable from "../../../lib/ReusableTable";
-import { AdvanceColumns } from "../../Common/Advance/AdvanceCol.tsx"; // Make sure this columns file exists
+import { AdvanceColumns } from "../../Common/Advance/AdvanceCol.tsx";
 import { useNavigate } from "react-router-dom";
+import useDelete from "../../../Hooks/useDelete";
+import { toast } from "react-toastify";
 
 const AdvanceSummary = () => {
   const columns = useMemo(() => AdvanceColumns, []);
   const navigate = useNavigate();
- 
+  const { deleteData } = useDelete("advances");
 
   const onView = (row: IAdvance) => {
     navigate(`view/${row._id}`);
   };
 
-
-
   const handleAddAdvance = () => {
     navigate("/admin/advance/add");
+  };
+
+  // Add this handler for delete
+  const handleDelete = async (row: IAdvance, refetch: () => void) => {
+    try {
+      await deleteData(row._id);
+      toast.success("Advance deleted successfully!");
+      refetch();
+    } catch (error: any) {
+      toast.error(error.message || "An unexpected error occurred.");
+    }
   };
 
   return (
@@ -33,34 +38,13 @@ const AdvanceSummary = () => {
           Add Advance
         </Button>
       </Box>
-      {/* {!branchList?.data ? (
-        <DropDownSkeleton height={56} width="100%" />
-      ) : (
-        <FormControl fullWidth>
-          <InputLabel id="branch-select-label">Select Branch</InputLabel>
-          <Select
-            labelId="branch-select-label"
-            id="branch-select"
-            // value={selectedBranch}
-            label="Select Branch"
-            // onChange={handleBranchChange}
-          >
-            {branchList.data.map((branch) => (
-              <MenuItem key={branch._id} value={branch._id}>
-                {branch.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )} */}
-
       <ReusableTable<IAdvance>
-        // key={selectedBranch}
         subtitle="Dashboard"
         headLine="Advance Table"
         endpoint={`advances`}
         searchEndpoint={`advances/search?branch`}
-        onView={onView}
+        onDelete={handleDelete} // <-- Add this line
+        // onView={onView}
         columns={columns}
       />
     </div>

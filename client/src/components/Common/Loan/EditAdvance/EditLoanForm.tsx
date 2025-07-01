@@ -13,8 +13,8 @@ import type {
   ICustomerDropDown,
   GetResData,
 } from "../../Customer/CustomerTypes";
-import type { IBranch, IBranchDropDown } from "../../Branch/OrderTypes";
-import type { IUserDropDown } from "../../User/UserTypes";
+import type { IBranch, IBranchDropDown } from "../../Order/OrderTypes";
+import type { IUserDropDown } from "../../Employee/UserTypes";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../store";
 import { toast } from "react-toastify";

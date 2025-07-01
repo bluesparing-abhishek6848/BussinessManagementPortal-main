@@ -1,9 +1,7 @@
-import EditUser from "../../Common/User/EditUser/EditUser"
+import EditUser from "../../Common/Employee/EditUser/EditUser";
 
 const AdminEditUser = () => {
-  return (
-    <EditUser />
-  )
-}
+  return <EditUser />;
+};
 
-export default AdminEditUser
+export default AdminEditUser;

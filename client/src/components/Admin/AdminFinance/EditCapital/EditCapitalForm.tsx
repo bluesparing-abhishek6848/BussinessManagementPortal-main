@@ -5,7 +5,7 @@ import usePut from "../../../../Hooks/usePut";
 import InputField from "../../../../lib/InputField";
 import { ReusableAutocomplete } from "../../../../lib/ReusableAutocomplete";
 import { toast } from "react-toastify";
-import type { IBranchDropDown } from "../../../Common/Branch/OrderTypes";
+import type { IBranchDropDown } from "../../../Common/Order/OrderTypes";
 import useGet from "../../../../Hooks/useGet";
 import type { GetResData } from "../../../Common/Customer/CustomerTypes";
 import { useEffect } from "react";

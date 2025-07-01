@@ -7,7 +7,7 @@ import ReusableTable from "../../../lib/ReusableTable";
 import { toast } from "react-toastify";
 import type { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import type { IBranch } from "../Branch/OrderTypes";
+import type { IBranch } from "../Order/OrderTypes";
 // import ConfirmDialog from "../../../lib/ConfirmDelete";
 
 const UsersTable = () => {

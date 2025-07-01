@@ -59,13 +59,13 @@ const AddCapital = lazy(
 const Profile = lazy(() => import("./pages/Profile"));
 const SignUpForm = lazy(() => import("./pages/AuthSwitcher/SignUpForm"));
 const AdminOrdersTable = lazy(
-  () => import("./components/Admin/AdminBranch/AdminOrderTable")
+  () => import("./components/Admin/AdminOrder/AdminOrderTable")
 );
 const AdminAddOrderForm = lazy(
-  () => import("./components/Admin/AdminBranch/AdminAddBranch")
+  () => import("./components/Admin/AdminOrder/AdminAddBranch")
 );
 const AdminEditBranchForm = lazy(
-  () => import("./components/Admin/AdminBranch/AdminEditBranchForm")
+  () => import("./components/Admin/AdminOrder/AdminEditBranchForm")
 );
 const EditCapital = lazy(
   () => import("./components/Admin/AdminFinance/EditCapital/EditCapital")

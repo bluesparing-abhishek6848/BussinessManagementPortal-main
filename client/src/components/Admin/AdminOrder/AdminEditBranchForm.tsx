@@ -1,4 +1,4 @@
-import EditBranch from "../../Common/Branch/EditBranch/EditBranch";
+import EditBranch from "../../Common/Order/EditOrder/EditBranch";
 
 const AdminEditBranchForm = () => {
   return <EditBranch />;

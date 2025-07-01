@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
 const financeSchema = new mongoose.Schema({
-
+advanceId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Advance",
+  required: false,
+},
   type:{
     type: String,
     enum: ["income", "expense"],

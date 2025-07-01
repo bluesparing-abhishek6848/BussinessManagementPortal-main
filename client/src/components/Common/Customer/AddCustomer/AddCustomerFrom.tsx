@@ -9,7 +9,7 @@ import FormWrapper from "../../../../lib/FormWrapper";
 import SubmitButton from "../../../../lib/ButtonWrapper";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../store";
-import type { IBranch } from "../../Branch/OrderTypes";
+import type { IBranch } from "../../Order/OrderTypes";
 
 interface AddCustomerFormProps {
   phone: string;

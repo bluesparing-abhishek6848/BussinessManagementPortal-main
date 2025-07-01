@@ -1,6 +1,7 @@
 import Advance from "../models/advanceSchema.js";
 import Finance from "../models/FinanceSchema.js";
 import ApiResponse from "../utils/apiResponse.js";
+import moment from "moment";
 
 // Helper to get IST date
 const getISTDate = () => new Date(Date.now() + (5.5 * 60 * 60 * 1000));
@@ -24,6 +25,8 @@ export const createAdvance = async (req, res) => {
       amount: advanceAmount,
       createdAt: istDate,
       updatedAt: istDate,
+      createdBy: req.user.id,
+      advanceId: newAdvance._id,
     });
     await financeEntry.save();
 
@@ -100,6 +103,7 @@ export const updateAdvance = async (req, res) => {
   }
 };
 
+
 // DELETE
 export const deleteAdvance = async (req, res) => {
   try {
@@ -110,13 +114,18 @@ export const deleteAdvance = async (req, res) => {
         .status(404)
         .json(new ApiResponse(404, null, "Advance not found"));
     }
+    const createdAtIST = new Date(deletedAdvance.createdAt.getTime() + (5.5 * 60 * 60 * 1000));
+    const startOfDay = moment(createdAtIST).startOf('day').toDate();
+    const endOfDay = moment(createdAtIST).endOf('day').toDate();
 
-    // Optionally delete related finance entry if you have a reference
-    // await Finance.deleteOne({ referenceId: id });
+    await Finance.deleteOne({
+    advanceId: deletedAdvance._id
+
+    });
 
     res
       .status(200)
-      .json(new ApiResponse(200, null, "Advance deleted successfully"));
+      .json(new ApiResponse(200, null, "Advance and related finance entry deleted successfully"));
   } catch (error) {
     res
       .status(500)

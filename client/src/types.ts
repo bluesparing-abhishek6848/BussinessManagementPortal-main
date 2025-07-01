@@ -1,4 +1,4 @@
-import type { IBranch } from "./components/Common/Branch/OrderTypes";
+import type { IBranch } from "./components/Common/Order/OrderTypes";
 
 export interface IUser {
   _id: string;
