@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useGet from "../../Hooks/useGet";
 
@@ -44,16 +44,17 @@ interface DashboardData {
   users: UsersStats;
 }
 
-const periodLabels: Record<keyof Omit<DashboardData, "employees" | "users">, string> = {
-  day: "Today",
-  week: "This Week",
-  month: "This Month",
-  year: "This Year",
-};
+const periodOptions = [
+  { key: "day", label: "Today" },
+  { key: "week", label: "This Week" },
+  { key: "month", label: "This Month" },
+  { key: "year", label: "This Year" },
+] as const;
 
 const AdminDashboard = () => {
   const { data, isLoading, error } = useGet<{ data: DashboardData }>("finance/advance-summary");
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState<keyof Omit<DashboardData, "employees" | "users">>("day");
 
   useEffect(() => {
     if (data && data.data) setDashboard(data.data);
@@ -63,6 +64,8 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (error) toast.error(error);
   }, [error]);
+
+  const periodData = dashboard?.[selectedPeriod];
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -83,50 +86,56 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-        {(["day", "week", "month", "year"] as const).map((period) => (
-          <div key={period} className="bg-white rounded-2xl shadow-lg p-6 border-t-8 border-gradient-to-r from-blue-400 to-indigo-400 hover:scale-105 transition-transform duration-200">
-            <h3 className="text-xl font-bold mb-4 text-indigo-700">{periodLabels[period]}</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="text-green-600 font-semibold">Profit:</span>
-                <span className="font-bold">₹{dashboard?.[period].finance.totalProfit ?? 0}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-blue-600 font-semibold">Income:</span>
-                <span>₹{dashboard?.[period].finance.totalIncome ?? 0}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-red-600 font-semibold">Expense:</span>
-                <span>₹{dashboard?.[period].finance.totalExpense ?? 0}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-yellow-600 font-semibold">Advances:</span>
-                <span>
-                  {dashboard?.[period].advances.total ?? 0} (₹{dashboard?.[period].advances.totalAmount ?? 0})
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-purple-600 font-semibold">Orders:</span>
-                <span>
-                  {dashboard?.[period].orders.total ?? 0} | 
-                  <span className="ml-1 text-green-600">✔{dashboard?.[period].orders.completed ?? 0}</span> | 
-                  <span className="ml-1 text-orange-500">⏳{dashboard?.[period].orders.pending ?? 0}</span>
-                </span>
-              </div>
-              {period === "day" && (
-                <div className="flex items-center gap-2">
-                  <span className="text-cyan-600 font-semibold">Attendance:</span>
-                  <span>
-                    <span className="text-green-600">P:{dashboard?.[period].attendance.present ?? 0}</span>{" "}
-                    <span className="text-red-600">A:{dashboard?.[period].attendance.absent ?? 0}</span>{" "}
-                    <span className="text-yellow-600">L:{dashboard?.[period].attendance.leave ?? 0}</span>
-                  </span>
-                </div>
-              )}
+      {/* Period Dropdown */}
+      <div className="mt-8 flex justify-end">
+        <select
+          className="border rounded-lg px-4 py-2 text-lg"
+          value={selectedPeriod}
+          onChange={e => setSelectedPeriod(e.target.value as keyof Omit<DashboardData, "employees" | "users">)}
+        >
+          {periodOptions.map(opt => (
+            <option key={opt.key} value={opt.key}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Tiles for each stat */}
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <span className="text-green-600 font-semibold text-lg">Profit</span>
+          <span className="text-2xl font-bold mt-2">₹{periodData?.finance.totalProfit ?? 0}</span>
+        </div>
+        <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <span className="text-blue-600 font-semibold text-lg">Income</span>
+          <span className="text-2xl font-bold mt-2">₹{periodData?.finance.totalIncome ?? 0}</span>
+        </div>
+        <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <span className="text-red-600 font-semibold text-lg">Expense</span>
+          <span className="text-2xl font-bold mt-2">₹{periodData?.finance.totalExpense ?? 0}</span>
+        </div>
+        <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <span className="text-yellow-600 font-semibold text-lg">Advances</span>
+          <span className="text-2xl font-bold mt-2">{periodData?.advances.total ?? 0}</span>
+          <span className="text-gray-500 text-sm">₹{periodData?.advances.totalAmount ?? 0}</span>
+        </div>
+        <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <span className="text-purple-600 font-semibold text-lg">Orders</span>
+          <span className="text-2xl font-bold mt-2">{periodData?.orders.total ?? 0}</span>
+          <div className="flex gap-2 mt-1">
+            <span className="text-green-600">✔{periodData?.orders.completed ?? 0}</span>
+            <span className="text-orange-500">⏳{periodData?.orders.pending ?? 0}</span>
+          </div>
+        </div>
+        {selectedPeriod === "day" && (
+          <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+            <span className="text-cyan-600 font-semibold text-lg">Attendance</span>
+            <div className="flex gap-3 mt-2">
+              <span className="text-green-600">P:{periodData?.attendance.present ?? 0}</span>
+              <span className="text-red-600">A:{periodData?.attendance.absent ?? 0}</span>
+              <span className="text-yellow-600">L:{periodData?.attendance.leave ?? 0}</span>
             </div>
           </div>
-        ))}
+        )}
       </div>
 
       {!isLoading && !dashboard && (

@@ -175,26 +175,9 @@ export const refreshToken = async (req, res) => {
 };
 
 export const logoutUser = async (req, res) => {
-  const { refreshToken } = req.cookies;
-
-  if (!refreshToken) {
-    return res
-      .status(401)
-      .json(new ApiResponse(401, null, "No refresh token provided."));
-  }
 
   try {
-    // Find user with this refresh token
-    const user = await User.findOne({ refreshToken });
-    if (!user) {
-      return res
-        .status(403)
-        .json(new ApiResponse(403, null, "Invalid refresh token."));
-    }
-
-    // Clear the refresh token from the user
-    user.refreshToken = null;
-    await user.save();
+ ;
 
     // Clear cookies
     res.clearCookie("token");

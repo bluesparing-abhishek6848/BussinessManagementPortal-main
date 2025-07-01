@@ -95,7 +95,12 @@ export const createOrder = async (req, res, next) => {
 // READ: Get all orders
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const { status } = req.query;
+    const filter = {};
+    if (status) {
+      filter.status = status;
+    }
+    const orders = await Order.find(filter).sort({ createdAt: -1 });
     return res
       .status(200)
       .json(new ApiResponse(200, orders, "Orders fetched successfully."));
@@ -105,7 +110,6 @@ export const getAllOrders = async (req, res) => {
       .json(new ApiResponse(500, null, "Failed to fetch orders: " + error.message));
   }
 };
-
 export const getOrderById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -136,6 +140,7 @@ export const updateOrder = async (req, res) => {
     amountRecieved,
     expenseCost,
     price,
+    status, // Add status here
   } = req.body;
 
   try {
@@ -152,6 +157,7 @@ export const updateOrder = async (req, res) => {
     order.amountRecieved = amountRecieved ?? order.amountRecieved;
     order.expenseCost = expenseCost ?? order.expenseCost;
     order.price = price ?? order.price;
+    order.status = status ?? order.status; // Allow status update
 
     const updatedOrder = await order.save();
 
