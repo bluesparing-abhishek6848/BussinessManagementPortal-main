@@ -2,24 +2,33 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useGet from "../../Hooks/useGet";
 
-interface AttendanceStats {
-  present: number;
-  absent: number;
-  leave: number;
+interface AttendanceData {
+  _id: string;
+  employee: string;
+  date: string;
+  status: string;
+  // add other fields as needed
 }
-interface OrderStats {
-  total: number;
-  completed: number;
-  pending: number;
+interface OrderData {
+  _id: string;
+  customer: string;
+  createdAt: string;
+  status: string;
+  // add other fields as needed
 }
-interface AdvanceStats {
-  total: number;
-  totalAmount: number;
+interface AdvanceData {
+  _id: string;
+  employee: string;
+  createdAt: string;
+  advanceAmount: number;
+  // add other fields as needed
 }
-interface FinanceStats {
-  totalIncome: number;
-  totalExpense: number;
-  totalProfit: number;
+interface FinanceData {
+  _id: string;
+  type: string;
+  amount: number;
+  createdAt: string;
+  // add other fields as needed
 }
 interface EmployeesStats {
   total: number;
@@ -30,10 +39,10 @@ interface UsersStats {
   admins: number;
 }
 interface DashboardPeriodData {
-  attendance: AttendanceStats;
-  orders: OrderStats;
-  advances: AdvanceStats;
-  finance: FinanceStats;
+  attendance: AttendanceData[];
+  orders: OrderData[];
+  advances: AdvanceData[];
+  finance: FinanceData[];
 }
 interface DashboardData {
   day: DashboardPeriodData;
@@ -66,6 +75,59 @@ const AdminDashboard = () => {
   }, [error]);
 
   const periodData = dashboard?.[selectedPeriod];
+
+  // Calculate summary stats from arrays
+  const attendanceStats = React.useMemo(() => {
+    if (!periodData) return { present: 0, absent: 0, leave: 0 };
+    return periodData.attendance.reduce(
+      (acc, curr) => {
+        if (curr.status === "present") acc.present += 1;
+        else if (curr.status === "absent") acc.absent += 1;
+        else if (curr.status === "leave") acc.leave += 1;
+        return acc;
+      },
+      { present: 0, absent: 0, leave: 0 }
+    );
+  }, [periodData]);
+
+  const orderStats = React.useMemo(() => {
+    if (!periodData) return { total: 0, completed: 0, pending: 0 };
+    return periodData.orders.reduce(
+      (acc, curr) => {
+        acc.total += 1;
+        if (curr.status === "completed") acc.completed += 1;
+        else if (curr.status === "pending") acc.pending += 1;
+        return acc;
+      },
+      { total: 0, completed: 0, pending: 0 }
+    );
+  }, [periodData]);
+
+  const advanceStats = React.useMemo(() => {
+    if (!periodData) return { total: 0, totalAmount: 0 };
+    return periodData.advances.reduce(
+      (acc, curr) => {
+        acc.total += 1;
+        acc.totalAmount += curr.advanceAmount || 0;
+        return acc;
+      },
+      { total: 0, totalAmount: 0 }
+    );
+  }, [periodData]);
+
+  const financeStats = React.useMemo(() => {
+    if (!periodData) return { totalIncome: 0, totalExpense: 0, totalProfit: 0 };
+    let totalIncome = 0, totalExpense = 0;
+    periodData.finance.forEach(f => {
+      if (f.type === "income") totalIncome += f.amount;
+      else if (f.type === "expense") totalExpense += f.amount;
+    });
+    return {
+      totalIncome,
+      totalExpense,
+      totalProfit: totalIncome - totalExpense,
+    };
+  }, [periodData]);
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -103,40 +165,65 @@ const AdminDashboard = () => {
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
           <span className="text-green-600 font-semibold text-lg">Profit</span>
-          <span className="text-2xl font-bold mt-2">₹{periodData?.finance.totalProfit ?? 0}</span>
+          <span className="text-2xl font-bold mt-2">₹{financeStats.totalProfit}</span>
         </div>
         <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
           <span className="text-blue-600 font-semibold text-lg">Income</span>
-          <span className="text-2xl font-bold mt-2">₹{periodData?.finance.totalIncome ?? 0}</span>
+          <span className="text-2xl font-bold mt-2">₹{financeStats.totalIncome}</span>
         </div>
         <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
           <span className="text-red-600 font-semibold text-lg">Expense</span>
-          <span className="text-2xl font-bold mt-2">₹{periodData?.finance.totalExpense ?? 0}</span>
+          <span className="text-2xl font-bold mt-2">₹{financeStats.totalExpense}</span>
         </div>
         <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
           <span className="text-yellow-600 font-semibold text-lg">Advances</span>
-          <span className="text-2xl font-bold mt-2">{periodData?.advances.total ?? 0}</span>
-          <span className="text-gray-500 text-sm">₹{periodData?.advances.totalAmount ?? 0}</span>
+          <span className="text-2xl font-bold mt-2">{advanceStats.total}</span>
+          <span className="text-gray-500 text-sm">₹{advanceStats.totalAmount}</span>
         </div>
         <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
           <span className="text-purple-600 font-semibold text-lg">Orders</span>
-          <span className="text-2xl font-bold mt-2">{periodData?.orders.total ?? 0}</span>
+          <span className="text-2xl font-bold mt-2">{orderStats.total}</span>
           <div className="flex gap-2 mt-1">
-            <span className="text-green-600">✔{periodData?.orders.completed ?? 0}</span>
-            <span className="text-orange-500">⏳{periodData?.orders.pending ?? 0}</span>
+            <span className="text-green-600">✔{orderStats.completed}</span>
+            <span className="text-orange-500">⏳{orderStats.pending}</span>
           </div>
         </div>
         {selectedPeriod === "day" && (
           <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
             <span className="text-cyan-600 font-semibold text-lg">Attendance</span>
             <div className="flex gap-3 mt-2">
-              <span className="text-green-600">P:{periodData?.attendance.present ?? 0}</span>
-              <span className="text-red-600">A:{periodData?.attendance.absent ?? 0}</span>
-              <span className="text-yellow-600">L:{periodData?.attendance.leave ?? 0}</span>
+              <span className="text-green-600">P:{attendanceStats.present}</span>
+              <span className="text-red-600">A:{attendanceStats.absent}</span>
+              <span className="text-yellow-600">L:{attendanceStats.leave}</span>
             </div>
           </div>
         )}
       </div>
+
+      {/* Detailed Data Tables */}
+      {/* <div className="mt-8">
+        <h3 className="font-bold mb-2">Attendance ({selectedPeriod})</h3>
+        <table className="min-w-full border">
+          <thead>
+            <tr>
+              <th className="border px-2">Employee</th>
+              <th className="border px-2">Date</th>
+              <th className="border px-2">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {periodData?.attendance.map((a) => (
+              <tr key={a._id}>
+                <td className="border px-2">{a.employee}</td>
+                <td className="border px-2">{new Date(a.date).toLocaleDateString()}</td>
+                <td className="border px-2">{a.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div> */}
+
+      {/* Repeat similar tables for Orders, Advances, Finance */}
 
       {!isLoading && !dashboard && (
         <div className="mt-10 bg-yellow-100 text-yellow-800 p-6 rounded-xl shadow-sm text-center text-lg">

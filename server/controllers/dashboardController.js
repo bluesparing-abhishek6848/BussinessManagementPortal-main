@@ -94,6 +94,30 @@ async function getFinanceStats(range) {
   return summary[0] || { totalIncome: 0, totalExpense: 0, totalProfit: 0 };
 }
 
+async function getAttendanceData(range) {
+  return Attendance.find({
+    date: { $gte: range.start, $lte: range.end },
+  });
+}
+
+async function getOrderData(range) {
+  return Order.find({
+    createdAt: { $gte: range.start, $lte: range.end },
+  });
+}
+
+async function getAdvanceData(range) {
+  return Advance.find({
+    createdAt: { $gte: range.start, $lte: range.end },
+  });
+}
+
+async function getFinanceData(range) {
+  return Finance.find({
+    createdAt: { $gte: range.start, $lte: range.end },
+  });
+}
+
 export const getDashboardSummary = async (req, res) => {
   try {
     const ranges = getDateRanges();
@@ -104,16 +128,16 @@ export const getDashboardSummary = async (req, res) => {
     const totalUsers = await User.countDocuments();
     const adminUsers = await User.countDocuments({ role: "admin" });
 
-    // For each period, get stats
+    // For each period, get full data
     const periods = ["day", "week", "month", "year"];
     const dashboardData = {};
 
     for (const period of periods) {
       dashboardData[period] = {
-        attendance: await getAttendanceStats(ranges[period]),
-        orders: await getOrderStats(ranges[period]),
-        advances: await getAdvanceStats(ranges[period]),
-        finance: await getFinanceStats(ranges[period]),
+        attendance: await getAttendanceData(ranges[period]),
+        orders: await getOrderData(ranges[period]),
+        advances: await getAdvanceData(ranges[period]),
+        finance: await getFinanceData(ranges[period]),
       };
     }
 
