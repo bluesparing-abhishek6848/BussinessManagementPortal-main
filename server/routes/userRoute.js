@@ -9,7 +9,7 @@ router.post('/admin', createUser);
 // POST route to login user
 router.post('/login', loginUser);
 
-router.post('logout',logoutUser)
+router.post('/logout',logoutUser)
 router.post('/refresh-token', refreshToken);
 
 export default router;
