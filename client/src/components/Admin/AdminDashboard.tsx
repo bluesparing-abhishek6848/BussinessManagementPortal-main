@@ -5,6 +5,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import usePut from "../../Hooks/usePut";
+import { promise } from "zod";
 interface AttendanceData {
   _id: string;
   employee: string;
@@ -460,7 +461,16 @@ const AdminDashboard = () => {
         const res = await putData(payload, `orders/updateOrder`);
         if (res && res.success) {
           toast.success("Order status updated!");
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+         
           // Optionally refresh data here
+          //refresh
+          // 
+          window.location.reload();
+
+        } else if (res && res.error) {
+          toast.error(res.error);
+
         } else {
           toast.error("Failed to update status");
         }
