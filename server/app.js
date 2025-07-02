@@ -27,7 +27,7 @@ app.use(cors({
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: "include", // Allow credentials (cookies, authorization headers, etc.)
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 }));
 
 app.use(express.json());
