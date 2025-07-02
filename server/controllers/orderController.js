@@ -145,87 +145,36 @@ export const getOrderById = async (req, res) => {
 
 // UPDATE: Update an order and related finance entries
 export const updateOrder = async (req, res) => {
-  const { id } = req.params;
-  const {
-    itemName,
-    customerName, // <-- Add this
-    itemImage,
-    itemDescription,
-    quantity,
-    amountRecieved,
-    expenseCost,
-    price,
-    status,
-  } = req.body;
-
+ const {orderId,status} = req.body;
   try {
-    const order = await Order.findById(id);
+    if (!orderId || !status) {
+      return res
+        .status(400)
+        .json(new ApiResponse(400, null, "Missing required fields."));  
+    }
+
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }
+    );
     if (!order) {
       return res
         .status(404)
         .json(new ApiResponse(404, null, "Order not found."));
     }
-
-    // Update order fields
-    order.itemName = itemName ?? order.itemName;
-    order.customerName = customerName ?? order.customerName; // <-- Add this
-    order.itemImage = itemImage ?? order.itemImage;
-    order.itemDescription = itemDescription ?? order.itemDescription;
-    order.quantity = quantity ?? order.quantity;
-    order.amountRecieved = amountRecieved ?? order.amountRecieved;
-    order.expenseCost = expenseCost ?? order.expenseCost;
-    order.price = price ?? order.price;
-    order.status = status ?? order.status;
-    order.updatedAt = getISTDate(); // Update the updatedAt field
-
-    const updatedOrder = await order.save();
-
-    // Remove old finance entries for this order
-    await Finance.deleteMany({
-      description: { $regex: order.itemName, $options: "i" },
-    });
-
-    // Add new finance entries
-    const istDate = getISTDate();
-    const financeEntries = [];
-    if (amountRecieved && amountRecieved > 0) {
-      financeEntries.push(
-        new Finance({
-          type: "income",
-          date: istDate,
-          description: `Order income: ${order.itemName}`,
-          amount: amountRecieved,
-          createdAt: istDate,
-          updatedAt: istDate,
-        })
-      );
-    }
-    if (expenseCost && expenseCost > 0) {
-      financeEntries.push(
-        new Finance({
-          type: "expense",
-          date: istDate,
-          description: `Order expense: ${order.itemName}`,
-          amount: expenseCost,
-          createdAt: istDate,
-          updatedAt: istDate,
-        })
-      );
-    }
-    if (financeEntries.length > 0) {
-      await Finance.insertMany(financeEntries);
-    }
-
     return res
       .status(200)
-      .json(new ApiResponse(200, updatedOrder, "Order updated successfully."));
+      .json(new ApiResponse(200, order, "Order updated successfully."));
+
   } catch (error) {
     return res
       .status(500)
       .json(
         new ApiResponse(500, null, "Failed to update order: " + error.message)
       );
-  }
+
+};
 };
 
 // DELETE: Delete an order and related finance entries

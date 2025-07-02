@@ -4,7 +4,7 @@ import useGet from "../../Hooks/useGet";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-
+import usePut from "../../Hooks/usePut";
 interface AttendanceData {
   _id: string;
   employee: string;
@@ -69,6 +69,7 @@ const AdminDashboard = () => {
   const { data, isLoading, error } = useGet<{ data: DashboardData }>(
     "finance/advance-summary"
   );
+  const { putData, isLoading: isPutLoading } = usePut<any>();
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [selectedPeriod, setSelectedPeriod] =
     useState<keyof Omit<DashboardData, "employees" | "users">>("day");
@@ -139,30 +140,36 @@ const AdminDashboard = () => {
   }, [periodData]);
 
   // Modal state
-const [openModal, setOpenModal] = useState<
-  null | "attendance" | "orders" | "advances" | "finance" | "income" | "expense"
->(null);
+  const [openModal, setOpenModal] = useState<
+    | null
+    | "attendance"
+    | "orders"
+    | "advances"
+    | "finance"
+    | "income"
+    | "expense"
+  >(null);
   const [modalPage, setModalPage] = useState(1);
 
   // Get the correct data array for the open modal and selected period
- const modalFullData = React.useMemo(() => {
-  if (!dashboard || !openModal) return [];
-  const periodData = dashboard[selectedPeriod];
-  if (!periodData) return [];
-  if (openModal === "finance") {
-    // Show all finance entries for "Profit"
-    return periodData.finance;
-  }
-  if (openModal === "income") {
-    // Only income entries
-    return periodData.finance.filter((f) => f.type === "income");
-  }
-  if (openModal === "expense") {
-    // Only expense entries
-    return periodData.finance.filter((f) => f.type === "expense");
-  }
-  return periodData[openModal] || [];
-}, [dashboard, openModal, selectedPeriod]);
+  const modalFullData = React.useMemo(() => {
+    if (!dashboard || !openModal) return [];
+    const periodData = dashboard[selectedPeriod];
+    if (!periodData) return [];
+    if (openModal === "finance") {
+      // Show all finance entries for "Profit"
+      return periodData.finance;
+    }
+    if (openModal === "income") {
+      // Only income entries
+      return periodData.finance.filter((f) => f.type === "income");
+    }
+    if (openModal === "expense") {
+      // Only expense entries
+      return periodData.finance.filter((f) => f.type === "expense");
+    }
+    return periodData[openModal] || [];
+  }, [dashboard, openModal, selectedPeriod]);
   // Paginate the data
   const modalData = React.useMemo(() => {
     const start = (modalPage - 1) * PAGE_SIZE;
@@ -172,12 +179,18 @@ const [openModal, setOpenModal] = useState<
   const modalTotalPages = Math.ceil(modalFullData.length / PAGE_SIZE);
 
   // Open modal and reset page
-const handleOpenModal = (
-  type: "attendance" | "orders" | "advances" | "finance" | "income" | "expense"
-) => {
-  setOpenModal(type);
-  setModalPage(1);
-};
+  const handleOpenModal = (
+    type:
+      | "attendance"
+      | "orders"
+      | "advances"
+      | "finance"
+      | "income"
+      | "expense"
+  ) => {
+    setOpenModal(type);
+    setModalPage(1);
+  };
 
   // Handle page change in modal
   const handleModalPageChange = (newPage: number) => {
@@ -312,9 +325,12 @@ const handleOpenModal = (
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            minWidth: 350,
-            maxWidth: 600,
+            minWidth: 700, // wider modal
+            maxWidth: "90vw",
+            minHeight: 400,
+            maxHeight: "90vh",
             borderRadius: 2,
+            overflow: "auto",
           }}
         >
           <h2 style={{ marginBottom: 16 }}>
@@ -325,83 +341,173 @@ const handleOpenModal = (
             {openModal === "income" && "Income List"}
             {openModal === "expense" && "Expense List"}
           </h2>
-          <div style={{ maxHeight: 350, overflowY: "auto" }}>
-            <table className="min-w-full border">
-          <thead>
-  <tr>
-    {openModal === "attendance" && (
-      <>
-        <th className="border px-2">Employee</th>
-        <th className="border px-2">Date</th>
-        <th className="border px-2">Status</th>
-      </>
-    )}
-    {openModal === "orders" && (
-      <>
-        <th className="border px-2">Customer</th>
-        <th className="border px-2">Date</th>
-        <th className="border px-2">Status</th>
-      </>
-    )}
-    {openModal === "advances" && (
-      <>
-        <th className="border px-2">Employee</th>
-        <th className="border px-2">Amount</th>
-        <th className="border px-2">Date</th>
-      </>
-    )}
-    {["finance", "income", "expense"].includes(openModal as string) && (
-      <>
-        <th className="border px-2">Type</th>
-        <th className="border px-2">Amount</th>
-        <th className="border px-2">Date</th>
-      </>
-    )}
-  </tr>
-</thead>
-<tbody>
-  {modalData.map((item: any) => (
-    <tr key={item._id}>
-      {openModal === "attendance" && (
-        <>
-          <td className="border px-2">{item.employeeId.name || "--"}</td>
-          <td className="border px-2">
-            {new Date(item.date).toLocaleDateString()}
-          </td>
-          <td className="border px-2">{item.status}</td>
-        </>
-      )}
-      {openModal === "orders" && (
-        <>
-          <td className="border px-2">{item.customerName || "--"}</td>
-          <td className="border px-2">
-            {new Date(item.date).toLocaleDateString()}
-          </td>
-          <td className="border px-2">{item.status}</td>
-        </>
-      )}
-      {openModal === "advances" && (
-        <>
-          <td className="border px-2">{item.employeeId.name || "--"}</td>
-          <td className="border px-2">{item.advanceAmount}</td>
-          <td className="border px-2">
-            {new Date(item.date).toLocaleDateString()}
-          </td>
-        </>
-      )}
-      {["finance", "income", "expense"].includes(openModal as string) && (
-        <>
-          <td className="border px-2">{item.type}</td>
-          <td className="border px-2">{item.amount}</td>
-          <td className="border px-2">
-            {new Date(item.date).toLocaleDateString()}
-          </td>
-        </>
-      )}
-    </tr>
-  ))}
-</tbody>
- {/* <tbody>
+          <div style={{ maxHeight: "60vh", overflow: "auto" }}>
+            <div style={{ overflowX: "auto" }}>
+              <table className="min-w-full border text-sm">
+                <thead className="bg-gray-100 sticky top-0 z-10">
+                  <tr>
+                    {openModal === "attendance" && (
+                      <>
+                        <th className="border px-2">Employee</th>
+                        <th className="border px-2">Date</th>
+                        <th className="border px-2">Status</th>
+                        <th className="border px-2">Check-In</th>
+                        <th className="border px-2">Check-Out</th>
+                      </>
+                    )}
+                    {openModal === "orders" && (
+                      <>
+                        <th className="border px-2">Customer</th>
+                        <th className="border px-2">Date</th>
+                        <th className="border px-2">Status</th>
+                        <th className="border px-2">Amount</th>
+                        <th className="border px-2">Amount Received</th>
+                        <th className="border px-2">Expense Cost</th>
+                        <th className="border px-2" style={{ minWidth: 120 }}>
+                          Item Description
+                        </th>
+                        <th className="border px-2">Action</th>
+                      </>
+                    )}
+                    {openModal === "advances" && (
+                      <>
+                        <th className="border px-2">Employee</th>
+                        <th className="border px-2">Amount</th>
+                        <th className="border px-2">Date</th>
+                      </>
+                    )}
+                    {["finance", "income", "expense"].includes(
+                      openModal as string
+                    ) && (
+                      <>
+                        <th className="border px-2">Type</th>
+                        <th className="border px-2">Amount</th>
+                        <th className="border px-2">Date</th>
+                        <th className="border px-2">Description</th>
+                      </>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {modalData.map((item: any) => (
+                    <tr key={item._id}>
+                      {openModal === "attendance" && (
+                        <>
+                          <td className="border px-2">
+                            {item.employeeId?.name || "--"}
+                          </td>
+                          <td className="border px-2">
+                            {new Date(item.date).toLocaleDateString()}
+                          </td>
+                          <td className="border px-2">{item.status}</td>
+                          <td className="border px-2">
+                            {item.checkInTime
+                              ? new Date(item.checkInTime).toLocaleTimeString(
+                                  [],
+                                  { hour: "2-digit", minute: "2-digit" }
+                                )
+                              : "--"}
+                          </td>
+                          <td className="border px-2">
+                            {item.checkOutTime
+                              ? new Date(item.checkOutTime).toLocaleTimeString(
+                                  [],
+                                  { hour: "2-digit", minute: "2-digit" }
+                                )
+                              : "--"}
+                          </td>
+                        </>
+                      )}
+                      {openModal === "orders" && (
+                        <>
+                          <td className="border px-2">
+                            {item.customerName || "--"}
+                          </td>
+                          <td className="border px-2">
+                            {new Date(item.date).toLocaleDateString()}
+                          </td>
+                          <td className="border px-2">{item.status}</td>
+                          <td className="border px-2">{item.price || "--"}</td>
+                          <td className="border px-2">
+                            {item.amountRecieved ?? "--"}
+                          </td>
+                          <td className="border px-2">
+                            {item.expenseCost ?? "--"}
+                          </td>
+                          <td
+                            className="border px-2"
+                            style={{
+                              maxWidth: 180,
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              cursor: "pointer",
+                            }}
+                            title={item.itemDescription}
+                          >
+                            {item.itemDescription}
+                          </td>
+                       <td className="border px-2">
+  <select
+    value={item.status}
+    onChange={async (e) => {
+      const newStatus = e.target.value;
+      try {
+        const payload = {
+          orderId: item._id,
+          status: newStatus,
+        };
+        const res = await putData(payload, `orders/updateOrder`);
+        if (res && res.success) {
+          toast.success("Order status updated!");
+          // Optionally refresh data here
+        } else {
+          toast.error("Failed to update status");
+        }
+      } catch (err) {
+        toast.error("Error updating status");
+      }
+    }}
+    className="border rounded px-1"
+    disabled={isPutLoading}
+  >
+    <option value="recieved">Recieved</option>
+    <option value="making">Making</option>
+    <option value="completed">Completed</option>
+    <option value="pending">Pending</option>
+  </select>
+</td>
+                        </>
+                      )}
+                      {openModal === "advances" && (
+                        <>
+                          <td className="border px-2">
+                            {item.employeeId?.name || "--"}
+                          </td>
+                          <td className="border px-2">{item.advanceAmount}</td>
+                          <td className="border px-2">
+                            {new Date(item.date).toLocaleDateString()}
+                          </td>
+                        </>
+                      )}
+                      {["finance", "income", "expense"].includes(
+                        openModal as string
+                      ) && (
+                        <>
+                          <td className="border px-2">{item.type}</td>
+                          <td className="border px-2">{item.amount}</td>
+                          <td className="border px-2">
+                            {new Date(item.date).toLocaleDateString()}
+                          </td>
+                          <td className="border px-2">
+                            {item.description || "--"}
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+                {/* <tbody>
   {modalData.map((item: any) => (
     <tr key={item._id}>
       {openModal === "attendance" && (
@@ -443,7 +549,8 @@ const handleOpenModal = (
     </tr>
   ))}
 </tbody>  */}
- </table>
+              </table>
+            </div>
             {/* Pagination Controls */}
             <div className="flex justify-between items-center mt-4">
               <Button

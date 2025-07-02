@@ -5,7 +5,11 @@ import usePut from "../../../../Hooks/usePut";
 import InputField from "../../../../lib/InputField";
 import { ReusableAutocomplete } from "../../../../lib/ReusableAutocomplete";
 import { toast } from "react-toastify";
-import type { IBranchDropDown } from "../../../Common/Order/OrderTypes";
+// TODO: Replace the following definition with the correct import if IBranchDropDown exists elsewhere
+export interface IBranchDropDown {
+  _id: string;
+  name: string;
+}
 import useGet from "../../../../Hooks/useGet";
 import type { GetResData } from "../../../Common/Customer/CustomerTypes";
 import { useEffect } from "react";
