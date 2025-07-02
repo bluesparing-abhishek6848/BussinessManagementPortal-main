@@ -5,7 +5,6 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import usePut from "../../Hooks/usePut";
-import { promise } from "zod";
 interface AttendanceData {
   _id: string;
   employee: string;

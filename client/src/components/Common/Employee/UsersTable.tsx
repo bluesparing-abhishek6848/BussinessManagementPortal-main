@@ -7,7 +7,7 @@ import ReusableTable from "../../../lib/ReusableTable";
 import { toast } from "react-toastify";
 import type { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import type { IBranch } from "../Order/OrderTypes";
+// import type { IBranch } from "../Order/OrderTypes";
 // import ConfirmDialog from "../../../lib/ConfirmDelete";
 
 const UsersTable = () => {
@@ -19,7 +19,7 @@ const UsersTable = () => {
   // const [loading, setLoading] = useState(false);
   // const [refetchFunc, setRefetchFunc] = useState<() => void>(() => () => {});
 
-  const branch = user?.branch as IBranch;
+  const branch = user?.branch as any;
   const { deleteData } = useDelete("users");
   const columns = useMemo(() => UserColumns, []);
 

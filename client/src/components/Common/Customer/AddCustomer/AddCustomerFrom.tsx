@@ -9,7 +9,7 @@ import FormWrapper from "../../../../lib/FormWrapper";
 import SubmitButton from "../../../../lib/ButtonWrapper";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../store";
-import type { IBranch } from "../../Order/OrderTypes";
+// import type { IBranch } from "../../Order/OrderTypes";
 
 interface AddCustomerFormProps {
   phone: string;
@@ -32,7 +32,7 @@ const AddCustomerForm = () => {
 
   const [preview, setPreview] = useState<string | null>(null);
   const { user } = useSelector((state: RootState) => state.auth);
-  const branch = user?.branch as IBranch;
+  const branch = user?.branch as any;
   const branchId = branch._id;
 
   const aadharPic = watch("aadharPic");

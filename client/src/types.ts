@@ -1,11 +1,11 @@
-import type { IBranch } from "./components/Common/Order/OrderTypes";
+// import type { IBranch } from "./components/Common/Order/OrderTypes";
 
 export interface IUser {
   _id: string;
   profilePic: string;
   name: string;
   phone: number;
-  branch: IBranch | string;
+  branch: any | string;
   email: string;
   password: string;
   role: "admin" | "branch-manager" | "user" | string;

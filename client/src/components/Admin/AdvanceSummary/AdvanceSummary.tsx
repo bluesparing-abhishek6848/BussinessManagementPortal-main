@@ -12,10 +12,6 @@ const AdvanceSummary = () => {
   const navigate = useNavigate();
   const { deleteData } = useDelete("advances");
 
-  const onView = (row: IAdvance) => {
-    navigate(`view/${row._id}`);
-  };
-
   const handleAddAdvance = () => {
     navigate("/admin/advance/add");
   };

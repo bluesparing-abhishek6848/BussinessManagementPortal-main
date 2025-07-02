@@ -10,7 +10,7 @@ import useGet from "../../../../Hooks/useGet";
 import React, { useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReusableAutocomplete } from "../../../../lib/ReusableAutocomplete";
-import type { IBranchDropDown } from "../../Order/OrderTypes";
+// import type { IBranchDropDown } from "../../Order/OrderTypes";
 import type { GetResData } from "../../Customer/CustomerTypes";
 import { toast } from "react-toastify";
 import SubmitButton from "../../../../lib/ButtonWrapper";
@@ -21,7 +21,7 @@ interface EditUsersFormProps {
   phone: string;
   email: string;
   role: string;
-  branch: IBranchDropDown;
+  branch: any;
 }
 
 const roles = [
@@ -44,7 +44,7 @@ const EditUserForm = ({
     error,
   } = usePut<any, EditUsersFormProps>();
   const { data: branchData } =
-    useGet<GetResData<IBranchDropDown>>("branches/drop-down");
+    useGet<GetResData<any>>("branches/drop-down");
   const branchList = useMemo(() => branchData?.data || [], [branchData]);
   const roleList = useMemo(() => roles, []);
   const {
@@ -178,7 +178,7 @@ const EditUserForm = ({
                   control={control}
                   rules={{ required: "Branch is required" }}
                   render={({ field }) => (
-                    <ReusableAutocomplete<IBranchDropDown>
+                    <ReusableAutocomplete<any>
                       label="Branch"
                       value={field.value}
                       onChange={field.onChange}
@@ -186,7 +186,7 @@ const EditUserForm = ({
                       getOptionLabel={(option) => option.name}
                       isOptionEqualToValue={(opt, val) => opt._id === val._id}
                       error={!!errors.branch}
-                      helperText={errors.branch?.message}
+                      // helperText={errors.branch?.message}
                     />
                   )}
                 />

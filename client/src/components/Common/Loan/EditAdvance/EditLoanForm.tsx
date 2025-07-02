@@ -13,7 +13,7 @@ import type {
   ICustomerDropDown,
   GetResData,
 } from "../../Customer/CustomerTypes";
-import type { IBranch, IBranchDropDown } from "../../Order/OrderTypes";
+// import type { IBranch, IBranchDropDown } from "../../Order/OrderTypes";
 import type { IUserDropDown } from "../../Employee/UserTypes";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../store";
@@ -58,7 +58,7 @@ const EditLoanForm = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.auth);
   const { data: loanDataRes } = useGet<any>(`loans/${id}`);
-  const branch = user?.branch as IBranch;
+  const branch = user?.branch as any;
   const { data: customerList } = useGet<GetResData<ICustomerDropDown>>(
     `customers/drop-down?branch=${branch?._id}`
   );
@@ -66,7 +66,7 @@ const EditLoanForm = () => {
     `users/drop-down?branch=${branch._id}`
   );
   const { data: branchList } =
-    useGet<GetResData<IBranchDropDown>>("branches/drop-down");
+    useGet<GetResData<any>>("branches/drop-down");
   const { putData, isLoading: isUpdating } = usePut<any, LoanData>();
 
   const {
@@ -145,7 +145,7 @@ const EditLoanForm = () => {
   }, [startDate, tenure, setValue]);
 
   const onSubmit = async (data: LoanData) => {
-    let currentBranchObject: IBranchDropDown | undefined = undefined;
+    let currentBranchObject: any | undefined = undefined;
 
     if (
       user?.branch &&
@@ -153,7 +153,7 @@ const EditLoanForm = () => {
       "_id" in user.branch &&
       "name" in user.branch
     ) {
-      const branch = user.branch as IBranchDropDown;
+      const branch = user.branch as any;
       currentBranchObject = {
         _id: branch._id,
         name: branch.name,
