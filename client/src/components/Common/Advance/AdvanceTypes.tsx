@@ -9,6 +9,7 @@ export interface IAdvance {
     department?: string;
   };
   status: "pending" | "approved" | "rejected";
+  date: string; // <-- Add this line
   createdAt: string;
   updatedAt: string;
 }

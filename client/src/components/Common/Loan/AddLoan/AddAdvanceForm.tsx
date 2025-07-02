@@ -1,5 +1,5 @@
-import {Grid } from "@material-ui/core"
-import TextField from '@mui/material/TextField';
+import { Grid } from "@material-ui/core";
+import TextField from "@mui/material/TextField";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +21,7 @@ const advanceSchema = z.object({
     name: z.string(),
   }),
   advanceAmount: z.number().min(1, "Advance amount must be greater than 0"),
+  date: z.string().optional(), // <-- Add this line
 });
 
 type AdvanceData = z.infer<typeof advanceSchema>;
@@ -30,9 +31,7 @@ const AddAdvanceForm = () => {
 
   console.log("User:", user);
   // const branchId = user?.branch?._id;
-  const { data: userList } = useGet<{ data: any }>(
-    `employees`
-  );
+  const { data: userList } = useGet<{ data: any }>(`employees`);
 
   console.log("User List:", userList);
   const navigate = useNavigate();
@@ -54,10 +53,11 @@ const AddAdvanceForm = () => {
   });
 
   const onSubmit = async (data: AdvanceData) => {
-    const payload = {
+    const payload: any = {
       employeeId: data.employee._id,
       advanceAmount: data.advanceAmount,
     };
+    if (data.date) payload.date = data.date; // <-- Add this line
     await postData(payload, "advances");
   };
 
@@ -88,16 +88,16 @@ const AddAdvanceForm = () => {
               control={control}
               rules={{ required: "Employee is required" }}
               render={({ field }) => (
-             <ReusableAutocomplete<any>
-  label="Employee"
-  value={field.value}
-  onChange={field.onChange}
-  options={userList?.data || []}
-  getOptionLabel={(option) => option.name}
-  isOptionEqualToValue={(opt, val) => opt._id === val._id}
-  error={!!errors.employee}
-  helperText={errors.employee?.message}
-/>
+                <ReusableAutocomplete<any>
+                  label="Employee"
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={userList?.data || []}
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(opt, val) => opt._id === val._id}
+                  error={!!errors.employee}
+                  helperText={errors.employee?.message}
+                />
               )}
             />
           </Grid>
@@ -114,7 +114,24 @@ const AddAdvanceForm = () => {
                   error={!!errors.advanceAmount}
                   helperText={errors.advanceAmount?.message}
                   {...field}
-                  onChange={e => setValue("advanceAmount", Number(e.target.value))}
+                  onChange={(e) =>
+                    setValue("advanceAmount", Number(e.target.value))
+                  }
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="date"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label="Advance Date"
+                  type="datetime-local"
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                  {...field}
                 />
               )}
             />

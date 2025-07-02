@@ -9,18 +9,21 @@ const getISTDate = () => new Date(Date.now() + (5.5 * 60 * 60 * 1000));
 // CREATE
 export const createAdvance = async (req, res) => {
   try {
-    const { advanceAmount, employeeId } = req.body;
+    const { advanceAmount, employeeId,date } = req.body;
+    let istAdvanceDate = new Date(date);
+istAdvanceDate = new Date(istAdvanceDate.getTime() + 5.5 * 60 * 60 * 1000);
     const newAdvance = new Advance({
       advanceAmount,
       employeeId,
       createdBy: req.user.id,
+      date:istAdvanceDate , // Use IST date
     });
     await newAdvance.save();
 
     const istDate = getISTDate();
     const financeEntry = new Finance({
       type: "expense",
-      date: istDate,
+      date: istAdvanceDate,
       description: 'advance',
       amount: advanceAmount,
       createdAt: istDate,

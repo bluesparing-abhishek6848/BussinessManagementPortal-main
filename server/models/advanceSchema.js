@@ -15,6 +15,13 @@ const advanceSchema = new mongoose.Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'approved',
   },
+  date:{
+    type: Date,
+    // default: Date.now,
+    required: true, // Ensure date is provided
+
+
+  },
   createdAt: {
     type: Date,
     default: Date.now,

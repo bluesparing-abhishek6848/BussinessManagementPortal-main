@@ -49,22 +49,22 @@ async function getAttendanceStats(range) {
 }
 
 async function getOrderStats(range) {
-  const total = await Order.countDocuments({ createdAt: { $gte: range.start, $lte: range.end } });
+  const total = await Order.countDocuments({ date: { $gte: range.start, $lte: range.end } });
   const completed = await Order.countDocuments({
-    createdAt: { $gte: range.start, $lte: range.end },
+    date: { $gte: range.start, $lte: range.end },
     status: "completed",
   });
   const pending = await Order.countDocuments({
-    createdAt: { $gte: range.start, $lte: range.end },
+    date: { $gte: range.start, $lte: range.end },
     status: "pending",
   });
   return { total, completed, pending };
 }
 
 async function getAdvanceStats(range) {
-  const total = await Advance.countDocuments({ createdAt: { $gte: range.start, $lte: range.end } });
+  const total = await Advance.countDocuments({ date: { $gte: range.start, $lte: range.end } });
   const totalAmountAgg = await Advance.aggregate([
-    { $match: { createdAt: { $gte: range.start, $lte: range.end } } },
+    { $match: { date: { $gte: range.start, $lte: range.end } } },
     { $group: { _id: null, total: { $sum: "$advanceAmount" } } },
   ]);
   const totalAmount = totalAmountAgg[0]?.total || 0;
@@ -73,7 +73,7 @@ async function getAdvanceStats(range) {
 
 async function getFinanceStats(range) {
   const summary = await Finance.aggregate([
-    { $match: { createdAt: { $gte: range.start, $lte: range.end } } },
+    { $match: { date: { $gte: range.start, $lte: range.end } } },
     {
       $group: {
         _id: null,
@@ -102,19 +102,19 @@ async function getAttendanceData(range) {
 
 async function getOrderData(range) {
   return Order.find({
-    createdAt: { $gte: range.start, $lte: range.end },
+    date: { $gte: range.start, $lte: range.end },
   });
 }
 
 async function getAdvanceData(range) {
   return Advance.find({
-    createdAt: { $gte: range.start, $lte: range.end },
+    date: { $gte: range.start, $lte: range.end },
   });
 }
 
 async function getFinanceData(range) {
   return Finance.find({
-    createdAt: { $gte: range.start, $lte: range.end },
+    date: { $gte: range.start, $lte: range.end },
   });
 }
 

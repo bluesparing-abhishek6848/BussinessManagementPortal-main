@@ -6,6 +6,15 @@ const orderSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  date:{
+    type: Date,
+    required: true,
+  },
+  customerName: {
+    type: String,
+    required: true,
+    trim: true
+  },
   // itemImage: {
   //   type: String,
   //   trim: true
@@ -41,6 +50,11 @@ itemDescription: {
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  updatedAt: {
+    type: Date,   
+    default: null,
+    required: false
   }
   ,
   createdBy: {

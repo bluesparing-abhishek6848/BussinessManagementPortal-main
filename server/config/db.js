@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 // Connection URI
-const uri = "mongodb://localhost:27017/employeeDB1";
+const uri = "mongodb://localhost:27017/employeeDB";
 
 // Connect to MongoDB
 mongoose.connect(uri)

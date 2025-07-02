@@ -8,8 +8,10 @@ const getISTDate = () => new Date(Date.now() + 5.5 * 60 * 60 * 1000);
 export const createOrder = async (req, res, next) => {
   const {
     itemName,
+    customerName, // <-- Add this
     // itemImage,
     itemDescription,
+    date,
     quantity,
     amountRecieved,
     expenseCost,
@@ -19,10 +21,12 @@ export const createOrder = async (req, res, next) => {
   // Validate required fields
   if (
     !itemName ||
+    !customerName || // <-- Add this
     !itemDescription ||
     !quantity ||
     !price ||
     !req.user ||
+    !date ||
     !req.user.id
   ) {
     return res
@@ -32,11 +36,16 @@ export const createOrder = async (req, res, next) => {
 
   try {
     const createdBy = req.user.id;
-
+// Convert frontend date to IST
+let istOrderDate = new Date(date);
+istOrderDate = new Date(istOrderDate.getTime() + 5.5 * 60 * 60 * 1000);
     // Create the order
     const newOrder = new Order({
       itemName,
+      customerName, // <-- Add this
       // itemImage,
+      date: istOrderDate, // Use the IST date
+    
       itemDescription,
       quantity,
       amountRecieved,
@@ -55,7 +64,7 @@ export const createOrder = async (req, res, next) => {
       financeEntries.push(
         new Finance({
           type: "income",
-          date: istDate,
+          date: istOrderDate,
           description: `Order income: ${itemName}`,
           amount: amountRecieved,
           createdAt: istDate,
@@ -68,7 +77,7 @@ export const createOrder = async (req, res, next) => {
       financeEntries.push(
         new Finance({
           type: "expense",
-          date: istDate,
+          date: istOrderDate,
           description: `Order expense: ${itemName}`,
           amount: expenseCost,
           createdAt: istDate,
@@ -87,10 +96,11 @@ export const createOrder = async (req, res, next) => {
   } catch (error) {
     return res
       .status(500)
-      .json(new ApiResponse(500, null, "Failed to create order: " + error.message));
+      .json(
+        new ApiResponse(500, null, "Failed to create order: " + error.message)
+      );
   }
 };
-
 
 // READ: Get all orders
 export const getAllOrders = async (req, res) => {
@@ -107,7 +117,9 @@ export const getAllOrders = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json(new ApiResponse(500, null, "Failed to fetch orders: " + error.message));
+      .json(
+        new ApiResponse(500, null, "Failed to fetch orders: " + error.message)
+      );
   }
 };
 export const getOrderById = async (req, res) => {
@@ -125,7 +137,9 @@ export const getOrderById = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json(new ApiResponse(500, null, "Failed to fetch order: " + error.message));
+      .json(
+        new ApiResponse(500, null, "Failed to fetch order: " + error.message)
+      );
   }
 };
 
@@ -134,35 +148,42 @@ export const updateOrder = async (req, res) => {
   const { id } = req.params;
   const {
     itemName,
+    customerName, // <-- Add this
     itemImage,
     itemDescription,
     quantity,
     amountRecieved,
     expenseCost,
     price,
-    status, // Add status here
+    status,
   } = req.body;
 
   try {
     const order = await Order.findById(id);
     if (!order) {
-      return res.status(404).json(new ApiResponse(404, null, "Order not found."));
+      return res
+        .status(404)
+        .json(new ApiResponse(404, null, "Order not found."));
     }
 
     // Update order fields
     order.itemName = itemName ?? order.itemName;
+    order.customerName = customerName ?? order.customerName; // <-- Add this
     order.itemImage = itemImage ?? order.itemImage;
     order.itemDescription = itemDescription ?? order.itemDescription;
     order.quantity = quantity ?? order.quantity;
     order.amountRecieved = amountRecieved ?? order.amountRecieved;
     order.expenseCost = expenseCost ?? order.expenseCost;
     order.price = price ?? order.price;
-    order.status = status ?? order.status; // Allow status update
+    order.status = status ?? order.status;
+    order.updatedAt = getISTDate(); // Update the updatedAt field
 
     const updatedOrder = await order.save();
 
     // Remove old finance entries for this order
-    await Finance.deleteMany({ description: { $regex: order.itemName, $options: "i" } });
+    await Finance.deleteMany({
+      description: { $regex: order.itemName, $options: "i" },
+    });
 
     // Add new finance entries
     const istDate = getISTDate();
@@ -201,7 +222,9 @@ export const updateOrder = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json(new ApiResponse(500, null, "Failed to update order: " + error.message));
+      .json(
+        new ApiResponse(500, null, "Failed to update order: " + error.message)
+      );
   }
 };
 
@@ -211,11 +234,15 @@ export const deleteOrder = async (req, res) => {
   try {
     const order = await Order.findByIdAndDelete(id);
     if (!order) {
-      return res.status(404).json(new ApiResponse(404, null, "Order not found."));
+      return res
+        .status(404)
+        .json(new ApiResponse(404, null, "Order not found."));
     }
 
     // Remove related finance entries
-    await Finance.deleteMany({ description: { $regex: order.itemName, $options: "i" } });
+    await Finance.deleteMany({
+      description: { $regex: order.itemName, $options: "i" },
+    });
 
     return res
       .status(200)
@@ -223,6 +250,8 @@ export const deleteOrder = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json(new ApiResponse(500, null, "Failed to delete order: " + error.message));
+      .json(
+        new ApiResponse(500, null, "Failed to delete order: " + error.message)
+      );
   }
 };

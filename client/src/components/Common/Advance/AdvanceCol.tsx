@@ -42,4 +42,12 @@ export const AdvanceColumns = [
     Cell: ({ row }: { row: { original: IAdvance } }) =>
       dayjs(row.original.createdAt).format("DD/MM/YYYY hh:mm A"),
   },
+  {
+    accessorKey: "date",
+    header: "Advance Date",
+    Cell: ({ row }: { row: { original: IAdvance } }) =>
+      row.original.date
+        ? dayjs(row.original.date).format("DD/MM/YYYY hh:mm A")
+        : "-",
+  },
 ];
