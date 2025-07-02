@@ -97,8 +97,8 @@ export const loginUser = async (req, res) => {
     );
     const options = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: true,
+      sameSite: "None",
       maxAge: 60 * 60 * 1000, // 1 hour
     };
     const refreshOptions = {
@@ -143,36 +143,28 @@ export const refreshToken = async (req, res) => {
   }
 
   try {
-    // Find user with this refresh token
-    const user = await User.findOne({ refreshToken });
-    if (!user) {
-      return res
-        .status(403)
-        .json(new ApiResponse(403, null, "Invalid refresh token."));
-    }
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    
+    const newAccessToken = jwt.sign(
+      { _id: decoded._id, role: decoded.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
-    // Generate new access token
-    const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
-    res.cookie("token", token, {
+    res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "development",
       secure: true,
       sameSite: "None",
-      maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 60 * 60 * 1000,
     });
 
     return res
       .status(200)
-      .json(new ApiResponse(200, { token }, "Token refreshed successfully."));
+      .json(new ApiResponse(200, null, "Token refreshed successfully."));
   } catch (error) {
     return res
-      .status(500)
-      .json(
-        new ApiResponse(500, null, `Error refreshing token. ${error.message}`)
-      );
+      .status(403)
+      .json(new ApiResponse(403, null, "Invalid refresh token."));
   }
 };
 
