@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
-
+import dotenv from "dotenv";
+dotenv.config(); // Load environment variables from .env file
 // Connection URI
-const uri = "mongodb://localhost:27017/employeeDB";
+const uri = process.env.MONGO_URI || "mongodb://localhost:27017/business_management_portal";
 
 // Connect to MongoDB
 mongoose.connect(uri)
