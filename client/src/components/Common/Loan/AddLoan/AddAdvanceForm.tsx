@@ -6,13 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import usePost from "../../../../Hooks/usePost";
 import useGet from "../../../../Hooks/useGet";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import FormWrapper from "../../../../lib/FormWrapper";
 import SubmitButton from "../../../../lib/ButtonWrapper";
 import { ReusableAutocomplete } from "../../../../lib/ReusableAutocomplete";
 // import type { IUserDropDown } from "../../User/UserTypes";
-import type { RootState } from "../../../../store";
+// import type { RootState } from "../../../../store";
 import React from "react";
 
 const advanceSchema = z.object({
@@ -27,7 +27,7 @@ const advanceSchema = z.object({
 type AdvanceData = z.infer<typeof advanceSchema>;
 
 const AddAdvanceForm = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  // const { user } = useSelector((state: RootState) => state.auth);
 
 
   // const branchId = user?.branch?._id;

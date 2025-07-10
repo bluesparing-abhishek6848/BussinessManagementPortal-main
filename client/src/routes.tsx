@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import AdminCustomer from "./components/Admin/AdminCustomer";
 import AddAdvance from "./components/Common/Loan/AddLoan/AddAdvance";
-import path from "path";
+// import path from "path";
 import FinanceTable from "./components/Finance/FinanceTable";
 import AddFinanceForm from "./components/Finance/AddFinanceForm";
 
