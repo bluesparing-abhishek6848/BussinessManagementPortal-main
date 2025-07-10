@@ -29,11 +29,11 @@ type AdvanceData = z.infer<typeof advanceSchema>;
 const AddAdvanceForm = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 
-  console.log("User:", user);
+
   // const branchId = user?.branch?._id;
   const { data: userList } = useGet<{ data: any }>(`employees`);
 
-  console.log("User List:", userList);
+
   const navigate = useNavigate();
   const { data, postData, isLoading, error, onClose } = usePost<any, any>();
 

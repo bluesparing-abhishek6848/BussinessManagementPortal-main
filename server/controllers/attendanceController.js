@@ -20,10 +20,10 @@ export const createAttendance = async (req, res) => {
       .status(400)
       .json(new ApiResponse(400, null, "Employee ID, date, and status are required."));
   }
+  
 
   try {
-    const istDate = toISTDate(date);
-
+    const istDate = new Date(date);
     // Check if attendance for this employee on this date already exists
     const existingAttendance = await Attendance.findOne({ employeeId, date: istDate });
     if (existingAttendance) {
@@ -39,6 +39,7 @@ export const createAttendance = async (req, res) => {
       checkInTime,
       checkOutTime,
       createdBy: req.user?._id,
+      createdAt: istDate,
     });
     await newAttendance.save();
 

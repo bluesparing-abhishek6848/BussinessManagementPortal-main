@@ -55,21 +55,27 @@ export const AdminSidebar = [
     link: "admin/employees",
     icon: <UserCog />,
   },
-  {
-    name: "Advance",
-    link: "admin/advance",
-    icon: <Currency />,
-  },
-  {
+    {
     name: "Orders",
     link: "admin/orders",
     icon: <Split />,
+  },
+  {
+    name: "Advance",
+    link: "admin/advance",
+    icon: <BadgeIndianRupee />,
+  },
+
+  {
+    name:"Finance",
+    link:"admin/finance",
+    icon: <SquareKanban />,
   },
 
   {
     name: "Attendance",
     link: "admin/attendance",
-    icon: <SquareKanban />,
+    icon: <Users />,
   },
 ];
 

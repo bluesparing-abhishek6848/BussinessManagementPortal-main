@@ -11,7 +11,7 @@ export const createAdvance = async (req, res) => {
   try {
     const { advanceAmount, employeeId,date } = req.body;
     let istAdvanceDate = new Date(date);
-istAdvanceDate = new Date(istAdvanceDate.getTime() + 5.5 * 60 * 60 * 1000);
+// istAdvanceDate = new Date(istAdvanceDate.getTime() + 5.5 * 60 * 60 * 1000);
     const newAdvance = new Advance({
       advanceAmount,
       employeeId,

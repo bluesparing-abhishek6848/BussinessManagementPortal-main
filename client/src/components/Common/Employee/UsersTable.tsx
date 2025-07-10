@@ -68,15 +68,15 @@ const UsersTable = () => {
     }
   };
 
-  const handleEdit = (row: IUsers) => {
-    if (role === "admin") {
-      navigate(`/admin/users/edit/${row._id}`, { state: row });
-    } else if (role === "branchManager") {
-      navigate(`/branch-manager/users/edit/${row._id}`, { state: row });
-    } else {
-      alert("Unauthorized role");
-    }
-  };
+  // const handleEdit = (row: IUsers) => {
+  //   if (role === "admin") {
+  //     navigate(`/admin/users/edit/${row._id}`, { state: row });
+  //   } else if (role === "branchManager") {
+  //     navigate(`/branch-manager/users/edit/${row._id}`, { state: row });
+  //   } else {
+  //     alert("Unauthorized role");
+  //   }
+  // };
 
   const makeEndPoints = () => {
     return "employees";
@@ -98,7 +98,7 @@ const UsersTable = () => {
         searchEndpoint={makeSearchEndpoints()}
         columns={columns}
         onAdd={handleAdd}
-        onEdit={handleEdit}
+        // onEdit={handleEdit}
         onDelete={handleDelete}
       />
       {/* <ConfirmDialog

@@ -1,8 +1,12 @@
 import User from "../models/userSchema.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import Attendance from "../models/atttendanceSchema.js";
+import Advance from "../models/advanceSchema.js";
+import Order from "../models/orderSchema.js";
+import Finance from "../models/FinanceSchema.js";
 import ApiResponse from "../utils/apiResponse.js";
-
+import Employee from "../models/employeeSchema.js";
 // POST route to create a new user
 export const createUser = async (req, res) => {
   const { name, email, password, phone, role } = req.body;
@@ -184,5 +188,48 @@ export const logoutUser = async (req, res) => {
     return res
       .status(500)
       .json(new ApiResponse(500, null, `Error logging out. ${error.message}`));
+  }
+};
+
+
+
+// Delete an employee and all related records
+export const deleteEmployeeController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Delete employee
+    const deletedEmployee = await Employee.findByIdAndDelete(id);
+    if (!deletedEmployee) {
+      return res
+        .status(404)
+        .json(new ApiResponse(404, null, "Employee not found"));
+    }
+
+    // Delete related attendance records
+    await Attendance.deleteMany({ employeeId: id });
+
+    // Delete related advances and their finance records
+    const advances = await Advance.find({ employeeId: id });
+    const advanceIds = advances.map(a => a._id);
+    await Advance.deleteMany({ employeeId: id });
+    await Finance.deleteMany({ advanceId: { $in: advanceIds } });
+
+    // Delete related orders and their finance records
+    const orders = await Order.find({ createdBy: id });
+    const orderIds = orders.map(o => o._id);
+    await Order.deleteMany({ createdBy: id });
+    await Finance.deleteMany({ orderId: { $in: orderIds } });
+
+    // Optionally, delete finance records directly linked to employee
+    await Finance.deleteMany({ createdBy: id });
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "Employee and all related records deleted successfully"));
+  } catch (error) {
+    return res
+      .status(500)
+      .json(new ApiResponse(500, null, `Error deleting employee: ${error.message}`));
   }
 };

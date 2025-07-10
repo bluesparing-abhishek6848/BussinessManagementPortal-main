@@ -37,7 +37,7 @@ const SignInForm = () => {
   useEffect(() => {
     console
 .log("Login Data:", loginData);
-    console.log("Error:", error);
+
     
     if (loginData && loginData.data) {
       const user = loginData.data.user as IUser;
